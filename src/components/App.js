@@ -9,7 +9,7 @@ import CommentBox from './CommentBox';
 import CommentList from './CommentList';
 import RoomsList from './RoomsList';
 import CreateRoom from './CreateRoom';
-import Profile from './Profile';
+import ProfileForm from './profile/ProfileForm';
 import * as actions from './../actions';
 
 import { Nav, Navbar, NavItem } from 'react-bootstrap';
@@ -80,7 +80,7 @@ class App extends Component {
         <Route path="/signin" component={Signin} />
         <Route path="/signup" component={Signup} />
         <Route path="/signout" component={Signout} />
-        <Route path="/profile" component={Profile} />
+        <Route path="/profile" component={ProfileForm} />
         <Route path="/signupsuccess" component={SignupSuccess} />
         <Route path="/rooms" component={RoomsList} />
         <Route path="/user/addComment" component={CommentBox} />
