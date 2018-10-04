@@ -1,0 +1,1 @@
+export const SET_BASE_NAME = 'set_base_name';
