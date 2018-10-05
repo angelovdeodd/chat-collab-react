@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ButtonToolbar, ToggleButton, ToggleButtonGroup, ControlLabel, FormControl, Modal, Button } from 'react-bootstrap';
-import * as actions from './../../actions/actionsInvite';
+import { sendInvite } from './../../actions/actionsInvite';
+import { showModal, hideModal } from './../../actions/actionsModal';
 
 class InviteUserModal extends Component {
 
@@ -29,11 +30,12 @@ class InviteUserModal extends Component {
     };
 
     handleAccept = () => {
+        this.props.hideModal();
         this.props.sendInvite(this.props.invite.targetUid, this.state.formData);
     };
 
     handleCancel = () => {
-        this.props.closeModalNew();
+        this.props.hideModal();
     };
 
     renderSendButton() {
@@ -95,4 +97,10 @@ function mapStateToProps(state) {
     return { auth: state.auth, invite: state.invite };
 }
 
-export default connect(mapStateToProps, actions)(InviteUserModal);    
+export default connect(mapStateToProps,
+    {
+        sendInvite: sendInvite,
+        showModal: showModal,
+        hideModal: hideModal
+    }
+)(InviteUserModal);    

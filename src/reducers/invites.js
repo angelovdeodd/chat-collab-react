@@ -1,9 +1,8 @@
-import { OPEN_MODAL_NEW, CLOSE_MODAL_NEW,
+import { SET_TARGET,
          SEND_INVITE, INVITE_RECEIVED, STOP_INVITES,
          REJECT_INVITE, REJECT_RECEIVED, ACCEPT_INVITE, ACCEPT_RECEIVED } from './../actions/typesInvite';
 
 const initialState = {
-    modalNewVisible: false,
     targetUid: null,
     invitationsSent: [],
     invitationsReceived: []
@@ -13,10 +12,8 @@ export default function(state = initialState, action) {
     let invSent, invRec, index;
 
     switch(action.type) {
-        case OPEN_MODAL_NEW:
-            return { ...state, modalNewVisible: true, targetUid: action.payload };
-        case CLOSE_MODAL_NEW:
-            return { ...state, modalNewVisible: false };
+        case SET_TARGET:
+            return { ...state, targetUid: action.payload };
         case SEND_INVITE:
             invSent = state.invitationsSent;
             if (action.payload) {

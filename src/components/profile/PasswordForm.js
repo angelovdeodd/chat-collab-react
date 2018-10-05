@@ -16,7 +16,6 @@ class PasswordForm extends Component {
 
     render() {        
         const { handleSubmit } = this.props;
-        console.log("pform", this.props);
         return (
                 <Modal animation={false} show={true} onHide={this.props.hideModal}>
                 <Form horizontal onSubmit={handleSubmit(this.onSubmit)}>

@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, Button, Label } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import * as actions from './../actions/actionsInvite';
+import { setUidToInvite } from './../actions/actionsInvite';
+import { showModal } from './../actions/actionsModal';
 import InviteUserModal from './invite/InviteUserModal';
 
 class RoomUsers extends Component {
 
     handleClick = (uid) => {
-        this.props.openModalNew(uid);
+        this.props.setUidToInvite(uid);
+        this.props.showModal('invite-user');
     }
 
     renderInviteModal() {
-        if (this.props.invite.modalNewVisible) {
+        if (this.props.modal.activeModal === 'invite-user') {
             return <InviteUserModal/>;
         }
-        return false;
     }
 
     renderInviteButton(user) {
@@ -71,7 +72,7 @@ class RoomUsers extends Component {
 }
 
 function mapStateToProps(state) {
-    return { room: state.rooms, user: state.auth.user, invite: state.invite };
+    return { room: state.rooms, user: state.auth.user, invite: state.invite, modal: state.modal };
 }
 
-export default connect(mapStateToProps, actions)(RoomUsers);
+export default connect(mapStateToProps, { showModal: showModal, setUidToInvite: setUidToInvite })(RoomUsers);

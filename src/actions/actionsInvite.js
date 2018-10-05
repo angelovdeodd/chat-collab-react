@@ -1,4 +1,4 @@
-import { OPEN_MODAL_NEW, CLOSE_MODAL_NEW,
+import { SET_TARGET,
         SEND_INVITE, INVITE_RECEIVED, STOP_INVITES,
         REJECT_INVITE, REJECT_RECEIVED, ACCEPT_INVITE, ACCEPT_RECEIVED } from './typesInvite';
 
@@ -8,17 +8,10 @@ import 'firebase/auth';
 
 import * as actionsRoom from './actionsRoom';
 
-export function openModalNew(uid) {
+export function setUidToInvite(uid) {
     return {
-        type: OPEN_MODAL_NEW,
+        type: SET_TARGET,
         payload: uid
-    };
-}
-
-export function closeModalNew() {
-    return {
-        type: CLOSE_MODAL_NEW,
-        payload: false
     };
 }
 
