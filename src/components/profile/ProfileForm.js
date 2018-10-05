@@ -1,29 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import * as actions from './../../actions/actionsProfile';
+import * as actionsProfile from './../../actions/actionsProfile';
+import * as actionsModal from './../../actions/actionsModal';
 import { reduxForm, Field } from 'redux-form';
 import { Button, Label, Panel, Form, FormControl, FormGroup, ControlLabel, Col, Glyphicon } from 'react-bootstrap';
-
-const FieldInput = ({ input, meta, ...props }) => {
-    return (
-        <FormControl 
-            type={props.type}
-            placeholder={props.placeholder}
-            value={input.value}
-            onChange={input.onChange} />
-    );
-}
-
-const TextareaInput = ({ input, meta, ...props }) => {
-    return (
-        <FormControl
-            componentClass={props.type}
-            placeholder={props.placeholder}
-            value={input.value}
-            onChange={input.onChange} />
-    )
-}
+import FieldInput from './inputs/FieldInput';
+import TextareaInput from './inputs/TextareaInput';
+import PasswordForm from './PasswordForm';
+import PasswordChanged from './PasswordChanged';
 
 class ProfileForm extends Component {
 
@@ -36,7 +21,18 @@ class ProfileForm extends Component {
     }
 
     onChangePasswordClick = () => {
-        this.setState({ passwordFormVisible: true });
+        this.props.showModal('password-form');
+    }
+
+    renderPasswordModal() {
+        if(this.props.modalState.activeModal === 'password-form') {
+            return <PasswordForm />;
+        }
+    }
+    renderPasswordChangedModal() {
+        if(this.props.modalState.activeModal === 'password-changed') {
+            return <PasswordChanged />
+        }
     }
 
     renderEmailVerified() {
@@ -70,33 +66,6 @@ class ProfileForm extends Component {
             }
         } else {
             return (<Button disabled bsStyle="warning">Change Password</Button> );
-        }
-    }
-
-    renderPasswordForm() {
-        if (this.state.passwordFormVisible) {
-            return (
-                <section>
-                    <FormGroup>
-                        <Col sm={4} componentClass={ControlLabel}>Old password:</Col>
-                        <Col sm={4}>
-                            <Field name="oldPassword" type="password" component={FieldInput} />
-                        </Col>
-                    </FormGroup>
-                    <FormGroup>
-                    <Col sm={4} componentClass={ControlLabel}>New password:</Col>
-                        <Col sm={4}>
-                            <Field name="password1" type="password" component={FieldInput} />
-                        </Col> 
-                    </FormGroup>
-                    <FormGroup>
-                    <Col sm={4} componentClass={ControlLabel}>Repeat:</Col>
-                        <Col sm={4}>
-                            <Field name="password2" type="password" component={FieldInput} />
-                        </Col> 
-                    </FormGroup>
-                </section>
-            );
         }
     }
 
@@ -134,7 +103,7 @@ class ProfileForm extends Component {
                             <Col sm={3} componentClass={ControlLabel}>Password</Col>
                             <Col sm={8}>
                                 {this.renderPasswordButton()}
-                                {this.renderPasswordForm()}
+                                
                             </Col>
                         </FormGroup>
                         <FormGroup>
@@ -147,30 +116,34 @@ class ProfileForm extends Component {
                     </Form>
                 </Panel.Body>
             </Panel>
+            {this.renderPasswordModal()}
+            {this.renderPasswordChangedModal()}
             </Col>
         );
     }
 }
 
 function mapStateToProps(state) {
-    console.log("STARE", state.auth.user);
     const { displayName, phonenumber, email, emailVerified, uid } = state.auth.user;
     if (displayName) {
-        return { initialValues: 
-            { 
+        return { 
+            initialValues: { 
                 displayName: displayName,
                 phonenumber: phonenumber,
                 email: email,
                 emailVerified: true,
                 uid: uid
-            } 
+            },
+            modalState: state.modal
         };
     } else {
-        return {};
+        return {
+            modalState: state.modal
+        };
     }
 }
 
 export default compose(
-    connect(mapStateToProps, actions),
+    connect(mapStateToProps, { showModal: actionsModal.showModal }),
     reduxForm({ form: 'profile' })
 )(ProfileForm);

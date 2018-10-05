@@ -6,3 +6,6 @@ export const SIGNIN = 'send_signin';
 export const SIGNIN_ERROR = 'send_signin_error';
 export const SIGNOUT = 'signout';
 
+export const SHOW_MODAL = 'show_modal';
+export const HIDE_MODAL = 'hide_modal';
+
