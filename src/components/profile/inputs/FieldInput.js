@@ -7,7 +7,9 @@ const FieldInput = ({ input, meta, ...props }) => {
             type={props.type}
             placeholder={props.placeholder}
             value={input.value}
-            onChange={input.onChange} />
+            onChange={input.onChange}
+            onBlur={input.onBlur}
+             />
     );
 }
 

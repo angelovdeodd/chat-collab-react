@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import * as actionsProfile from './../../actions/actionsProfile';
+import { sendVerifyLink, reloadUser } from './../../actions/actionsProfile';
 import * as actionsModal from './../../actions/actionsModal';
 import { reduxForm, Field } from 'redux-form';
-import { Button, Label, Panel, Form, FormControl, FormGroup, ControlLabel, Col, Glyphicon } from 'react-bootstrap';
+import { Button, Label, Panel, Form, FormGroup, ControlLabel, Col } from 'react-bootstrap';
 import FieldInput from './inputs/FieldInput';
 import TextareaInput from './inputs/TextareaInput';
 import PasswordForm from './PasswordForm';
@@ -36,14 +36,29 @@ class ProfileForm extends Component {
     }
 
     renderEmailVerified() {
-        if (!this.props.initialValues || !this.props.initialValues.emailVerified) {
+        if (!this.props.emailVerificationPending && 
+            (!this.props.initialValues || !this.props.initialValues.emailVerified)) {
             return (
                 <section>
                 <Col sm={1}><h5><Label>Not verified</Label></h5></Col>
                 <Col sm={1}></Col>
                 <Col sm={1}>
-                    <Button bsStyle="info">Send link</Button>
+                    <Button bsStyle="info" onClick={this.props.sendVerifyLink}>Send link</Button>
                 </Col>
+                </section>
+            );
+        }
+    }
+
+    renderEmailVerificationCodeForm() {
+        if (this.props.emailVerificationPending) {
+            return (
+                <section>
+                    <Col sm={4}>
+                        <h5><Label>Link sent, please go to mail and click it.</Label></h5>
+                        <Button bsSize="small" bsStyle="success"
+                        onClick={this.props.reloadUser}>I did, please check</Button>
+                    </Col>
                 </section>
             );
         }
@@ -97,6 +112,7 @@ class ProfileForm extends Component {
                                     placeholder="email" />
                             </Col>
                             {this.renderEmailVerified()}
+                            {this.renderEmailVerificationCodeForm()}
                             {this.renderEmailChange()}
                         </FormGroup>
                         <FormGroup>
@@ -131,9 +147,10 @@ function mapStateToProps(state) {
                 displayName: displayName,
                 phonenumber: phonenumber,
                 email: email,
-                emailVerified: true,
+                emailVerified: emailVerified,
                 uid: uid
             },
+            emailVerificationPending: state.auth.emailVerificationPending,
             modalState: state.modal
         };
     } else {
@@ -144,6 +161,10 @@ function mapStateToProps(state) {
 }
 
 export default compose(
-    connect(mapStateToProps, { showModal: actionsModal.showModal }),
+    connect(mapStateToProps, { 
+        showModal: actionsModal.showModal,
+        sendVerifyLink: sendVerifyLink,
+        reloadUser: reloadUser
+    }),
     reduxForm({ form: 'profile' })
 )(ProfileForm);

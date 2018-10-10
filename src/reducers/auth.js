@@ -1,14 +1,14 @@
-import { CHANGE_AUTH, SIGNUP, SIGNUP_ERROR, SIGNIN, SIGNIN_ERROR, SIGNOUT } from './../actions/types';
-import { SET_BASE_NAME } from './../actions/typesProfile';
+import { CHANGE_AUTH, SIGNIN, SIGNIN_ERROR, SIGNOUT } from './../actions/types';
+import { SET_BASE_NAME, SEND_VERIFY_LINK } from './../actions/typesProfile';
 
 const initialState = {
-    signedUp: false,
     authenticated: false,
     user: {},
     signupErrorCode: '',
     signupErrorMessage: '',
     signinErrorCode: '',
-    signinErrorMessage: ''
+    signinErrorMessage: '',
+    emailVerificationPending: false
 };
 
 export default function(state = initialState, action) {
@@ -17,10 +17,6 @@ export default function(state = initialState, action) {
             return state;
         case CHANGE_AUTH:
             return { ...state, authenticated: action.payload };
-        case SIGNUP:
-            return { ...state, signedUp: true };
-        case SIGNUP_ERROR:
-            return { ...state, signupErrorCode: action.payload.code, signupErrorMessage: action.payload.message };
         case SIGNIN:
             return { ...state, authenticated: true, user: action.payload };
         case SIGNIN_ERROR:
@@ -29,5 +25,13 @@ export default function(state = initialState, action) {
             return { ...state, authenticated: false, user: {} };
         case SET_BASE_NAME:
             return { ...state, user: action.payload };
+        case SEND_VERIFY_LINK:
+            if(action.payload === 'pending' || action.payload === 'sent') {
+                return { ...state, emailVerificationPending: true };
+            }
+            if(action.payload === 'reload') {
+                return { ...state, emailVerificationPending: false };
+            }
+            return state;
     }
 }
