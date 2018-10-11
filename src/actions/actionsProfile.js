@@ -30,10 +30,8 @@ export const submitSignup = ({ email, password1, displayName }) => dispatch => {
 }
 
 export const submitSignin = ({ email, password }) => dispatch => {
-    console.log("SI|GNIN", email, password);
     return firebase.auth().signInWithEmailAndPassword(email, password)
         .catch((error) => {
-            console.log(error);
             switch (error.code) {
                 case 'auth/user-not-found':
                 case 'auth/invalid-email':
@@ -51,6 +49,13 @@ export const submitSignin = ({ email, password }) => dispatch => {
         })
         .then((response) => {
             if(response) dispatch({ type: SIGNIN, payload: response.user });
+        });
+}
+
+export const submitLostPasswordForm = ({ email }) => dispatch => {
+    return firebase.auth().sendPasswordResetEmail(email, { url: 'https://chat-collab.firebaseapp.com/signup' })
+        .catch((error) => {
+            throw new SubmissionError({ email: error.message });
         });
 }
 

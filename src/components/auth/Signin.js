@@ -5,6 +5,7 @@ import { reduxForm, Field } from 'redux-form';
 import * as validator from 'validator';
 import FieldInput from './../profile/inputs/FieldInput';
 import { Form, Panel, Col, Button, FormGroup, HelpBlock, ControlLabel } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { submitSignin } from '../../actions/actionsProfile';
 
 class Signin extends Component {
@@ -27,7 +28,7 @@ class Signin extends Component {
     /*
     * Returns field-specific submit error to be displayed in HelpBlock
     */
-   getSubmitError = fieldName => {
+    getSubmitError = fieldName => {
         if( !this.props.forms.signin ||
             !this.props.forms.signin.submitErrors ||
             !this.props.forms.signin.submitErrors[fieldName]) {
@@ -89,6 +90,9 @@ class Signin extends Component {
                             </FormGroup>
                         </Form>     
                     </Panel.Body>
+                    <Panel.Footer>
+                        <Link to="/forgotpassword">I forgot my password</Link>
+                    </Panel.Footer>
                 </Panel>
             </Col>
         );

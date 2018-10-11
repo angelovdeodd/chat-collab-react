@@ -10,6 +10,8 @@ import CommentList from './CommentList';
 import RoomsList from './RoomsList';
 import CreateRoom from './CreateRoom';
 import ProfileForm from './profile/ProfileForm';
+import LostPasswordForm from './auth/LostPasswordForm';
+import LostPasswordConfirm from './auth/LostPasswordConfirm';
 import * as actions from './../actions';
 
 import { Nav, Navbar, NavItem } from 'react-bootstrap';
@@ -86,6 +88,8 @@ class App extends Component {
         <Route path="/user/addComment" component={CommentBox} />
         <Route path="/user/comments" component={CommentList} />
         <Route path="/createroom" component={CreateRoom} />
+        <Route path="/forgotpassword" component={LostPasswordForm} />
+        <Route path="/forgotpasswordsubmitted" component={LostPasswordConfirm} />
       </div>
     );
   }
