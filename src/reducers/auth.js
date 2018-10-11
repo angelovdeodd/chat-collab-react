@@ -1,13 +1,9 @@
-import { CHANGE_AUTH, SIGNIN, SIGNIN_ERROR, SIGNOUT } from './../actions/types';
+import { CHANGE_AUTH, SIGNIN, SIGNOUT } from './../actions/types';
 import { SET_BASE_NAME, SEND_VERIFY_LINK } from './../actions/typesProfile';
 
 const initialState = {
     authenticated: false,
     user: {},
-    signupErrorCode: '',
-    signupErrorMessage: '',
-    signinErrorCode: '',
-    signinErrorMessage: '',
     emailVerificationPending: false
 };
 
@@ -19,8 +15,6 @@ export default function(state = initialState, action) {
             return { ...state, authenticated: action.payload };
         case SIGNIN:
             return { ...state, authenticated: true, user: action.payload };
-        case SIGNIN_ERROR:
-            return { ...state, signinErrorCode: action.payload.code, signinErrorMessage: action.payload.message };
         case SIGNOUT:
             return { ...state, authenticated: false, user: {} };
         case SET_BASE_NAME:

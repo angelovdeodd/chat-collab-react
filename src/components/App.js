@@ -3,7 +3,7 @@ import { Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Signup from './Signup';
 import SignupSuccess from './SignupSuccess';
-import Signin from './Signin';
+import Signin from './auth/Signin';
 import Signout from './Signout';
 import CommentBox from './CommentBox';
 import CommentList from './CommentList';

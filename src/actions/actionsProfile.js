@@ -1,4 +1,5 @@
 import { SET_BASE_NAME, SEND_VERIFY_LINK } from './typesProfile';
+import { SIGNIN } from './types';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { SubmissionError } from 'redux-form';
@@ -25,6 +26,31 @@ export const submitSignup = ({ email, password1, displayName }) => dispatch => {
             throw new SubmissionError({
                 email: error.message
             });
+        });
+}
+
+export const submitSignin = ({ email, password }) => dispatch => {
+    console.log("SI|GNIN", email, password);
+    return firebase.auth().signInWithEmailAndPassword(email, password)
+        .catch((error) => {
+            console.log(error);
+            switch (error.code) {
+                case 'auth/user-not-found':
+                case 'auth/invalid-email':
+                case 'auth/user-disabled':
+                    throw new SubmissionError({ email: error.message });
+                case 'auth/wrong-password':
+                    throw new SubmissionError({ password: error.message });
+                case 'auth/argument-error':
+                case 'auth/too-many-requests':
+                    throw new SubmissionError({ _error: error.message });
+                default:
+                    return false;
+            }
+            
+        })
+        .then((response) => {
+            if(response) dispatch({ type: SIGNIN, payload: response.user });
         });
 }
 
