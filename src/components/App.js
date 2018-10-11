@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Signup from './Signup';
-import SignupSuccess from './SignupSuccess';
+import Signup from './auth/Signup';
+import SignupSuccess from './auth/SignupSuccess';
 import Signin from './auth/Signin';
-import Signout from './Signout';
+import Signout from './auth/Signout';
 import CommentBox from './CommentBox';
 import CommentList from './CommentList';
 import RoomsList from './RoomsList';

@@ -4,8 +4,8 @@ import { compose } from 'redux';
 import * as validator from 'validator';
 import { reduxForm, Field } from 'redux-form';
 import { Button, Label, Panel, Form, FormGroup, FormControl, ControlLabel, Col, HelpBlock } from 'react-bootstrap';
-import FieldInput from './profile/inputs/FieldInput';
-import { submitSignup } from './../actions/actionsProfile';
+import FieldInput from './../profile/inputs/FieldInput';
+import { submitSignup } from './../../actions/actionsProfile';
 
 class Signup extends Component {
 
