@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './../../actions';
+import ConfirmationPanel from './hoc/ConfirmationPanel';
 
 class Signout extends Component {
 
@@ -10,7 +11,7 @@ class Signout extends Component {
 
     render() {
         return (
-            <div>User signed out</div>
+            <ConfirmationPanel title="Sign out">User signed out</ConfirmationPanel>
         );
     }
 }
