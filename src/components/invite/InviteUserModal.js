@@ -47,6 +47,8 @@ class InviteUserModal extends Component {
     }
 
     render() {
+        if (!this.props.active) return false;
+        
         return (
             <div className="static-modal">
             <Modal.Dialog>
