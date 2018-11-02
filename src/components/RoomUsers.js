@@ -9,7 +9,6 @@ import InviteButton from './invite/InviteButton';
 class RoomUsers extends Component {
 
     handleClick = (uid) => {
-        console.log(uid);
         this.props.setUidToInvite(uid);
         this.props.showModal('invite-user');
     }
