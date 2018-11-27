@@ -5,7 +5,7 @@ import { reduxForm, Field } from 'redux-form';
 import FieldInput from './../profile/inputs/FieldInput';
 import { Form, Panel, Col, Button, FormGroup, HelpBlock, ControlLabel, FormControl } from 'react-bootstrap';
 import { submitLostPasswordForm } from './../../actions/actionsProfile';
-import abstractForm from './hoc/abstractForm';
+import abstractForm from './../hoc/abstractForm';
 
 class LostPasswordForm extends Component {
 

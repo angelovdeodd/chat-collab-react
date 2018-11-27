@@ -5,7 +5,7 @@ import { reduxForm, Field } from 'redux-form';
 import { Button, Panel, Form, FormGroup, FormControl, ControlLabel, Col, HelpBlock } from 'react-bootstrap';
 import FieldInput from './../profile/inputs/FieldInput';
 import { submitSignup } from './../../actions/actionsProfile';
-import abstractForm from './hoc/abstractForm';
+import abstractForm from './../hoc/abstractForm';
 
 class Signup extends Component {
 
