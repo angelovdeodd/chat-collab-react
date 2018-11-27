@@ -8,7 +8,7 @@ import Signout from './auth/Signout';
 import CommentBox from './CommentBox';
 import CommentList from './CommentList';
 import RoomsList from './RoomsList';
-import CreateRoom from './CreateRoom';
+import CreateRoom from './room/CreateRoom';
 import ProfileForm from './profile/ProfileForm';
 import LostPasswordForm from './auth/LostPasswordForm';
 import LostPasswordConfirm from './auth/LostPasswordConfirm';
@@ -63,6 +63,7 @@ class App extends Component {
           {this.renderSignUp()}
           {this.renderSignIn()}
           <NavItem eventKey="rooms">Rooms</NavItem>
+          <NavItem eventKey="createroom">Create room</NavItem>
           <NavItem>{this.renderUser()}</NavItem>
         </Nav>
       </Navbar>
@@ -76,8 +77,7 @@ class App extends Component {
   
   render() {
     return (
-      <div className="App">
-        
+      <div className="App">       
         {this.renderHeader()}
         <Route path="/signin" component={Signin} />
         <Route path="/signup" component={Signup} />
