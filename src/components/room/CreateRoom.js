@@ -71,7 +71,7 @@ class CreateRoom extends Component {
                                 <Field
                                     name="roomInviteOnly"
                                     defaultValue="false"
-                                    values={['true', 'false']}
+                                    values={['false', 'true']}
                                     component={ToggleButtonInput} />
                             </Col>
                         </FormGroup>
@@ -103,5 +103,5 @@ class CreateRoom extends Component {
 
 export default compose(
     connect(null, actions),
-    reduxForm({form: 'createroom'})
+    reduxForm({form: 'createroom', initialValues: { maxUsers: 5, roomInviteOnly: false, roomType: 'visible' }})
 )(authRequired(abstractForm(CreateRoom)));
