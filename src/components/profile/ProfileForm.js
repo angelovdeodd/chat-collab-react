@@ -24,67 +24,8 @@ class ProfileForm extends Component {
         this.props.showModal('password-form');
     }
 
-    renderPasswordModal() {
-        if(this.props.modalState.activeModal === 'password-form') {
-            return <PasswordForm />;
-        }
-    }
-    renderPasswordChangedModal() {
-        if(this.props.modalState.activeModal === 'password-changed') {
-            return <PasswordChanged />
-        }
-    }
-
-    renderEmailVerified() {
-        if (!this.props.emailVerificationPending && 
-            (!this.props.initialValues || !this.props.initialValues.emailVerified)) {
-            return (
-                <section>
-                <Col sm={1}><h5><Label>Not verified</Label></h5></Col>
-                <Col sm={1}></Col>
-                <Col sm={1}>
-                    <Button bsStyle="info" onClick={this.props.sendVerifyLink}>Send link</Button>
-                </Col>
-                </section>
-            );
-        }
-    }
-
-    renderEmailVerificationCodeForm() {
-        if (this.props.emailVerificationPending) {
-            return (
-                <section>
-                    <Col sm={4}>
-                        <h5><Label>Link sent, please go to mail and click it.</Label></h5>
-                        <Button bsSize="small" bsStyle="success"
-                        onClick={this.props.reloadUser}>I did, please check</Button>
-                    </Col>
-                </section>
-            );
-        }
-    }
-
-    renderEmailChange() {
-        if (this.props.initialValues && this.props.initialValues.emailVerified) {
-            return (
-                <section>
-                    <Col sm={1}><Button bsStyle="warning">Change Email Address</Button></Col>
-                </section>
-            );
-        }
-    }
-
-    renderPasswordButton() {
-        if (this.props.initialValues && this.props.initialValues.emailVerified) {
-            if (!this.state.passwordFormVisible) {
-                return (<Button bsStyle="warning" onClick={this.onChangePasswordClick}>Change Password</Button>);
-            }
-        } else {
-            return (<Button disabled bsStyle="warning">Change Password</Button> );
-        }
-    }
-
     render() {
+        const { initialValues, emailVerificationPending } = this.props;
         return (
             <Col sm={10}>
             <Panel bsStyle="primary">
@@ -111,15 +52,53 @@ class ProfileForm extends Component {
                                     component={FieldInput}
                                     placeholder="email" />
                             </Col>
-                            {this.renderEmailVerified()}
-                            {this.renderEmailVerificationCodeForm()}
-                            {this.renderEmailChange()}
+                            {
+                                !emailVerificationPending &&
+                                (!initialValues || !initialValues.emailVerified) &&
+                                (
+                                <section>
+                                    <Col sm={1}><h5><Label>Not verified</Label></h5></Col>
+                                    <Col sm={1}></Col>
+                                    <Col sm={1}>
+                                        <Button bsStyle="info" onClick={this.props.sendVerifyLink}>Send link</Button>
+                                    </Col>
+                                </section>
+                                )
+                            }
+                            {
+                                emailVerificationPending && 
+                                (
+                                <section>
+                                    <Col sm={4}>
+                                        <h5><Label>Link sent, please go to mail and click it.</Label></h5>
+                                        <Button bsSize="small" bsStyle="success"
+                                            onClick={this.props.reloadUser}>I did, please check</Button>
+                                    </Col>
+                                </section>
+                                )
+                            }
+                            {
+                                initialValues && initialValues.emailVerified &&
+                                (
+                                <section>
+                                    <Col sm={1}><Button bsStyle="warning">Change Email Address</Button></Col>
+                                </section>
+                                )
+                            }
                         </FormGroup>
                         <FormGroup>
                             <Col sm={3} componentClass={ControlLabel}>Password</Col>
                             <Col sm={8}>
-                                {this.renderPasswordButton()}
-                                
+                            {
+                                initialValues && 
+                                initialValues.emailVerified &&
+                                !this.state.passwordFormVisible &&
+                                (<Button bsStyle="warning" onClick={this.onChangePasswordClick}>Change Password</Button>)
+                            }
+                            {
+                                (!initialValues || !initialValues.emailVerified) &&
+                                (<Button disabled bsStyle="warning">Change Password</Button> )
+                            }
                             </Col>
                         </FormGroup>
                         <FormGroup>
@@ -132,8 +111,14 @@ class ProfileForm extends Component {
                     </Form>
                 </Panel.Body>
             </Panel>
-            {this.renderPasswordModal()}
-            {this.renderPasswordChangedModal()}
+            {
+                (this.props.modalState.activeModal === 'password-form') &&
+                <PasswordForm />
+            }
+            {
+                (this.props.modalState.activeModal === 'password-changed') &&
+                <PasswordChanged />
+            }
             </Col>
         );
     }
