@@ -12,6 +12,11 @@ import abstractForm from './../hoc/abstractForm';
 
 class CreateRoom extends Component {
 
+    onSubmit = (form) => {
+        console.log(form);
+        console.log(this.props);
+    }
+
     /*
     * Form-specific validation functions
     */
@@ -21,13 +26,13 @@ class CreateRoom extends Component {
     maxLength55 = this.props.maxLength(55);
 
     render() {
-        const { invalid, pristine } = this.props;
+        const { handleSubmit, invalid, pristine } = this.props;
         return (
             <Col sm={10}>
             <Panel bsStyle="primary">
                 <Panel.Heading>Create New Room</Panel.Heading>
                 <Panel.Body>
-                    <Form horizontal onSubmit={this.onSubmit}>
+                    <Form horizontal onSubmit={handleSubmit(this.onSubmit)}>
                         <FormGroup validationState={this.props.getValidationState('roomName')}>
                             <Col sm={3} componentClass={ControlLabel}>Room Name:</Col>
                             <Col sm={3}>
@@ -55,7 +60,7 @@ class CreateRoom extends Component {
                             <Col sm={4}>
                                 <Field
                                     name="roomType"
-                                    default="visible"
+                                    defaultValue="visible"
                                     values={['visible', 'invisible']}
                                     component={ToggleButtonInput} />
                             </Col>
@@ -65,7 +70,7 @@ class CreateRoom extends Component {
                             <Col sm={4}>
                                 <Field
                                     name="roomInviteOnly"
-                                    default="false"
+                                    defaultValue="false"
                                     values={['true', 'false']}
                                     component={ToggleButtonInput} />
                             </Col>
