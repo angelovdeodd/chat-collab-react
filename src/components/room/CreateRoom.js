@@ -1,20 +1,32 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import * as actions from '../../actions';
+import { saveRoom, openRoom } from '../../actions/actionsRoom';
+import { hideModal } from '../../actions/actionsModal';
 import { reduxForm, Field } from 'redux-form';
-import { Button, Label, Panel, Form, FormGroup, InputGroup, ControlLabel, Col } from 'react-bootstrap';
+import { Button, Panel, Form, FormGroup, InputGroup, ControlLabel, Col } from 'react-bootstrap';
 import TextInput from './../formControls/TextInput';
 import NumberInput from './../formControls/NumberInput';
 import ToggleButtonInput from './../formControls/ToggleButtonInput';
 import authRequired from '../authRequired';
 import abstractForm from './../hoc/abstractForm';
+import CreateRoomResult from './CreateRoomResult';
 
 class CreateRoom extends Component {
 
     onSubmit = (form) => {
-        console.log(form);
-        console.log(this.props);
+        this.props.saveRoom(form);
+    }
+
+    onHideModal = () => {
+        this.props.hideModal();
+        this.props.reset();
+    }
+
+    openNewRoom = () => {
+        this.props.hideModal();
+        this.props.history.push('/rooms');
+        this.props.openRoom(this.props.newRoomKey);
     }
 
     /*
@@ -59,9 +71,9 @@ class CreateRoom extends Component {
                             <Col sm={3} componentClass={ControlLabel}>Visible on public list:</Col>
                             <Col sm={4}>
                                 <Field
-                                    name="roomType"
-                                    defaultValue="visible"
-                                    values={['visible', 'invisible']}
+                                    name="roomVisible"
+                                    defaultValue="true"
+                                    values={['true', 'false']}
                                     component={ToggleButtonInput} />
                             </Col>
                         </FormGroup>
@@ -69,9 +81,9 @@ class CreateRoom extends Component {
                             <Col sm={3} componentClass={ControlLabel}>Anyone can join:</Col>
                             <Col sm={4}>
                                 <Field
-                                    name="roomInviteOnly"
+                                    name="roomPublic"
                                     defaultValue="false"
-                                    values={['false', 'true']}
+                                    values={['true', 'false']}
                                     component={ToggleButtonInput} />
                             </Col>
                         </FormGroup>
@@ -94,6 +106,10 @@ class CreateRoom extends Component {
                             </Col>
                         </FormGroup>
                     </Form>
+                    {
+                        (this.props.modalState.activeModal === 'create-room-result') &&
+                        <CreateRoomResult openNewRoom={this.openNewRoom} hideModal={this.onHideModal} />
+                    }
                 </Panel.Body>
             </Panel>
             </Col>
@@ -101,7 +117,20 @@ class CreateRoom extends Component {
     }
 }
 
+function mapStateToProps(state) {
+    return {
+        modalState: state.modal,
+        newRoomKey: state.rooms.createdRoomKey
+    }
+}
+
 export default compose(
-    connect(null, actions),
-    reduxForm({form: 'createroom', initialValues: { maxUsers: 5, roomInviteOnly: false, roomType: 'visible' }})
+    connect(mapStateToProps, { saveRoom: saveRoom, openRoom: openRoom, hideModal: hideModal }),
+    reduxForm({form: 'createroom', initialValues: { 
+        roomName: '',
+        roomDescription: '',
+        maxUsers: 5,
+        roomPublic: 'false',
+        roomVisible: 'true'
+    }})
 )(authRequired(abstractForm(CreateRoom)));

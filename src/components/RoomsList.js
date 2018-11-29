@@ -47,7 +47,7 @@ class RoomsList extends Component {
 
     renderRooms() {
         return this.props.rooms.rooms.map(room => {
-            return <ListGroupItem key={room.key} onClick={() => this.handleClick(room.key)}>{room.channelName}</ListGroupItem>
+            return <ListGroupItem key={room.key} onClick={() => this.handleClick(room.key)}>{room.name}</ListGroupItem>
         });
     }
 
@@ -55,7 +55,7 @@ class RoomsList extends Component {
         return this.props.rooms.openRooms.map(room => {
             return (
                 <NavItem eventKey={room.key} key={room.key} onSelect={this.handleSelect}>
-                    {room.channelName}&nbsp;
+                    {room.name}&nbsp;
                     <Glyphicon glyph='remove' onClick={(event) => this.handleRemove(event, room.key)}/>
                 </NavItem>
             );
@@ -65,8 +65,8 @@ class RoomsList extends Component {
     renderRoomContents() {
         return this.props.rooms.openRooms.map(room => {
             return (
-                <Tab.Pane eventKey={room.key} key={room.key} title={room.channelName}>
-                    <Room roomKey={room.key}  name={room.channelName} />
+                <Tab.Pane eventKey={room.key} key={room.key} title={room.name}>
+                    <Room roomKey={room.key}  name={room.name} />
                 </Tab.Pane>
             );
         });

@@ -7,15 +7,17 @@ import {
         STOP_MESSAGES,
         OPEN_ROOM,
         CLOSE_ROOM,
+        CREATE_ROOM,
         ACTIVATE_ROOM,
         USER_ENTERS, USER_LEAVES, STOP_USERS } from './typesRoom';
+import { SHOW_MODAL } from './types';
 
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 
 export const fetchRooms = () => dispatch => {
-    const dbRef = firebase.database().ref('channels/');
+    const dbRef = firebase.database().ref('rooms/');
     dbRef.on('child_added', (snapshot) => {
         const roomData = snapshot.val();
         dispatch({ type: NEW_ROOM, payload: { ...roomData, key: snapshot.key } });
@@ -29,7 +31,7 @@ export const fetchRooms = () => dispatch => {
 }
 
 export function unsetRoomsWatcher() {
-    firebase.database().ref('channels/').off('child_added');
+    firebase.database().ref('rooms/').off('child_added');
     return { type: STOP_ROOMS, payload: false };
 }
 
@@ -84,7 +86,7 @@ export function unsetRoomUsersWatcher(roomKey) {
 }
 
 export const openRoom = (roomKey) => dispatch => {
-    const dbRef = firebase.database().ref('channels/' + roomKey);
+    const dbRef = firebase.database().ref('rooms/' + roomKey);
     const visitorsRef = firebase.database().ref('visitors/' + roomKey);
 
     let roomData;
@@ -120,4 +122,20 @@ export function closeRoom(roomKey) {
         type: CLOSE_ROOM,
         payload: roomKey
     };
+}
+
+export const saveRoom = (roomData) => dispatch => {
+    const uid = firebase.auth().currentUser.uid;
+    const dbRef = firebase.database().ref('rooms/');
+    dbRef.push({
+        name: roomData.roomName,
+        description: roomData.roomDescription,
+        public: roomData.roomPublic,
+        visible: roomData.roomVisible,
+        ownerId: uid,
+        maxUsers: roomData.maxUsers
+    }).then((resp) => {
+        dispatch({ type: CREATE_ROOM, payload: resp.key });
+        dispatch({ type: SHOW_MODAL, payload: 'create-room-result' });
+    });
 }

@@ -8,6 +8,7 @@ import { FETCH_ROOMS,
         SEND_MESSAGE,
         OPEN_ROOM,
         CLOSE_ROOM,
+        CREATE_ROOM,
         ACTIVATE_ROOM,
         STOP_MESSAGES,
         USER_ENTERS, USER_LEAVES, STOP_USERS } from '../actions/typesRoom';
@@ -18,6 +19,7 @@ const initialState = {
     openRooms: [],
     roomUsers: [],
     activeRoomKey: null,
+    createdRoomKey: null,
     messages: []
 };
 
@@ -52,9 +54,13 @@ export default function(state = initialState, action) {
                 state.messages[action.payload.roomKey].push(action.payload.message);
             }
             return { ...state };
-        //case CREATE_ROOM:
-            
+        case CREATE_ROOM:
+            return { ...state, createdRoomKey: action.payload };       
         case OPEN_ROOM:
+            if (action.payload.key === state.createdRoomKey) {
+                // newly created room opened, clear createdRoomKey
+                state = { ...state, createdRoomKey: null };
+            }
             if (state.openRooms.find(el => el.key === action.payload.key)) {
                 // room already open
                 return { ...state, activeRoomKey: action.payload.key};
