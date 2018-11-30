@@ -8,6 +8,7 @@ import Signout from './auth/Signout';
 import CommentBox from './CommentBox';
 import CommentList from './CommentList';
 import RoomsList from './RoomsList';
+import ChannelsList from './room/ChannelsList';
 import CreateRoom from './room/CreateRoom';
 import ProfileForm from './profile/ProfileForm';
 import LostPasswordForm from './auth/LostPasswordForm';
@@ -79,6 +80,7 @@ class App extends Component {
     return (
       <div className="App">       
         {this.renderHeader()}
+        <ChannelsList />
         <Route path="/signin" component={Signin} />
         <Route path="/signup" component={Signup} />
         <Route path="/signout" component={Signout} />

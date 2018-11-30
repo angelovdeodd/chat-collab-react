@@ -1,4 +1,6 @@
 import { 
+        FETCH_ROOMS,
+        FETCH_CHANNELS,
         STOP_ROOMS,
         NEW_ROOM,
         DISABLE_INPUT,
@@ -17,16 +19,42 @@ import 'firebase/auth';
 import 'firebase/database';
 
 export const fetchRooms = () => dispatch => {
-    const dbRef = firebase.database().ref('rooms/');
-    dbRef.on('child_added', (snapshot) => {
-        const roomData = snapshot.val();
-        dispatch({ type: NEW_ROOM, payload: { ...roomData, key: snapshot.key } });
+    const dbRef = firebase.database().ref('channels/');
+    // dbRef.on('child_added', (snapshot) => {
+    //     const roomData = snapshot.val();
+    //     dispatch({ type: NEW_ROOM, payload: { ...roomData, key: snapshot.key } });
         
-        if (roomData.fromInvite && roomData.targetUid === firebase.auth().currentUser.uid) {
-            dispatch(openRoom(snapshot.key));
-            dispatch(setRoomUsersWatcher(snapshot.key));
-            dispatch(setMessageWatcher(snapshot.key));
-        }
+    //     if (roomData.fromInvite && roomData.targetUid === firebase.auth().currentUser.uid) {
+    //         dispatch(openRoom(snapshot.key));
+    //         dispatch(setRoomUsersWatcher(snapshot.key));
+    //         dispatch(setMessageWatcher(snapshot.key));
+    //     }
+    // });
+    dbRef.once('value', (snapshot) => {
+        const channels = snapshot.val();
+        const keys = Object.keys(channels);
+        const data = keys.map(key => {
+            return { key: key, name: channels[key].name };
+        });
+        dispatch({ type: FETCH_CHANNELS, payload: data });
+        let roomsList = [];
+        
+        snapshot.forEach(channel => {
+            if (channel.hasChildren()) {
+                channel.forEach(room => {
+                    const roomData = room.val();
+                    let list = [];
+                    if (typeof roomData === 'object') {
+                        const keys = Object.keys(roomData);
+                        list = keys.map(key => {
+                            return { ...roomData[key], key:key, channelKey: channel.key }
+                        });
+                        roomsList = roomsList.concat(list);
+                    }
+                });
+            }
+        });
+        dispatch({ type: FETCH_ROOMS, payload: roomsList });
     });
 }
 
@@ -124,9 +152,10 @@ export function closeRoom(roomKey) {
     };
 }
 
-export const saveRoom = (roomData) => dispatch => {
+const saveChannelRoom =  (channelKey, roomData) => dispatch => {
+    const dbRef = firebase.database().ref(`channels/${channelKey}/rooms/`);
     const uid = firebase.auth().currentUser.uid;
-    const dbRef = firebase.database().ref('rooms/');
+
     dbRef.push({
         name: roomData.roomName,
         description: roomData.roomDescription,
@@ -137,5 +166,23 @@ export const saveRoom = (roomData) => dispatch => {
     }).then((resp) => {
         dispatch({ type: CREATE_ROOM, payload: resp.key });
         dispatch({ type: SHOW_MODAL, payload: 'create-room-result' });
+    });
+}
+
+export const saveRoom = (roomData) => dispatch => {
+    const uid = firebase.auth().currentUser.uid;
+    const channelRef = firebase.database().ref('channels/');
+    channelRef.orderByChild('name').equalTo(roomData.roomChannel).once('value', (snapshot) => {
+        if (snapshot.hasChildren()) {
+            let key = Object.keys(snapshot.val()).pop();
+            dispatch(saveChannelRoom(key, roomData));
+        } else {
+            channelRef.push({
+                name: roomData.roomChannel,
+                owner: uid
+            }).then((response) => {
+                dispatch(saveChannelRoom(response.key, roomData));
+            });
+        }
     });
 }

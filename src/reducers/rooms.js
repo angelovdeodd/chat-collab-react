@@ -1,5 +1,6 @@
 // ROOMS reducer
 import { FETCH_ROOMS,
+        FETCH_CHANNELS,
         STOP_ROOMS,
         NEW_ROOM,
         NEW_MESSAGE,
@@ -15,6 +16,7 @@ import { FETCH_ROOMS,
 
 const initialState = {
     inputEnabled: true,
+    channels: [],
     rooms: [],
     openRooms: [],
     roomUsers: [],
@@ -31,12 +33,10 @@ export default function(state = initialState, action) {
             const rooms = state.rooms;
             rooms.push(action.payload);
             return { ...state, rooms: rooms };
+        case FETCH_CHANNELS:
+            return { ...state, channels: action.payload };
         case FETCH_ROOMS:
-            const keys = Object.keys(action.payload.data);
-            const list = keys.map((key) => {
-                return { key: key, id: action.payload.data[key].channelId, name: action.payload.data[key].channelName };
-            });
-            return {...state, rooms: list};
+            return {...state, rooms: action.payload};
         case STOP_ROOMS: 
             return { ...state, rooms: [] };
         case DISABLE_INPUT:

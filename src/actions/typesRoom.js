@@ -1,4 +1,5 @@
 export const FETCH_ROOMS  = 'fetch_rooms';
+export const FETCH_CHANNELS = 'fetch_channels';
 export const STOP_ROOMS = 'stop_rooms';
 export const NEW_ROOM  = 'new_room';
 export const DISABLE_INPUT = 'disable_input';

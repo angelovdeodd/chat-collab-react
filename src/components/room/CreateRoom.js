@@ -67,6 +67,17 @@ class CreateRoom extends Component {
                                 />
                             </Col>
                         </FormGroup>
+                        <FormGroup validationState={this.props.getValidationState('roomChannel')}>
+                            <Col sm={3} componentClass={ControlLabel}>Channel/Category:</Col>
+                            <Col sm={4}>
+                                <Field
+                                    name="roomChannel"
+                                    component={TextInput}
+                                    placeholder="Channel"
+                                    validate={[this.minLength10, this.maxLength25, this.props.required]}
+                                />
+                            </Col>
+                        </FormGroup>
                         <FormGroup>
                             <Col sm={3} componentClass={ControlLabel}>Visible on public list:</Col>
                             <Col sm={4}>
@@ -129,6 +140,7 @@ export default compose(
     reduxForm({form: 'createroom', initialValues: { 
         roomName: '',
         roomDescription: '',
+        roomChannel: '',
         maxUsers: 5,
         roomPublic: 'false',
         roomVisible: 'true'
